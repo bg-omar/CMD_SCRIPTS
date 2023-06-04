@@ -6,6 +6,7 @@ param (
 $nvmVersion = "1.5.4"
 $nvmVersionV = "v$nvmVersion"
 $DisableInstallNvmFromTgz = $false
+$DefaultNodeVersion = "v18.15.0"
 
 $NVM_ZIP_URL = "https://github.com/jchip/nvm/archive/refs/tags/$nvmVersionV.zip"
 $NVM_TGZ_URL = "https://registry.npmjs.org/@jchip/nvm/-/nvm-$nvmVersion.tgz"
@@ -41,33 +42,6 @@ function Find-Folders {
     $browse.SelectedPath
     $browse.Dispose()
 }
-
-
-function getLtsVersion() {
-    $nodejsOrg = "https://nodejs.org"
-    $nodejsHtml = "$Env:TMP\nodejs.html"
-    $foundVersion = "v18.12.1"
-
-    Try {
-        Invoke-WebRequest $nodejsOrg -OutFile $nodejsHtml
-        $M = Select-String -CaseSensitive -Path $nodejsHtml -Pattern 'Download[ *](.+)[ *]LTS'
-
-        $G = $M.Matches.Groups[1]
-        if ($G.Success) {
-            $v = $G.Value
-            if (-not ($v.StartsWith("v"))) {
-                $v = "v" + $v
-            }
-            $foundVersion = $v
-        }
-    }
-    Catch {
-    }
-
-    return $foundVersion
-}
-
-$DefaultNodeVersion = getLtsVersion
 
 function Get-NodeJS($version) {
     Try {
