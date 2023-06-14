@@ -8,7 +8,8 @@ $nvmVersionV = "v$nvmVersion"
 $DisableInstallNvmFromTgz = $false
 $DefaultNodeVersion = "v12.13.0"
 
-$NVM_ZIP_URL = "https://github.com/jchip/nvm/archive/refs/tags/$nvmVersionV.zip"
+
+$NVM_ZIP_URL = "https://github.com/jchip/nvm/archive/$nvmVersionV.zip"
 $NVM_TGZ_URL = "https://registry.npmjs.org/@jchip/nvm/-/nvm-$nvmVersion.tgz"
 
 $ProgressPreference = "SilentlyContinue"
@@ -43,7 +44,6 @@ function Find-Folders {
     $browse.Dispose()
 }
 
-
 function Get-NodeJS($version) {
     Try {
         if ( -not (Test-Path $NVM_NODE )) {
@@ -68,11 +68,15 @@ function Get-NodeJS($version) {
         $zipFile = "node-$version-win-$arch.zip"
         $nodejsBinUrl = "$nodejsMirror/$version/$zipFile"
         $cacheDir = "$NVM_CACHE\$version"
+        # if ( -not (Test-Path $cacheDir)) {
+        #     New-Item -Path "$cacheDir" -ItemType "directory" | Out-Null
+        # }
         if ( -not ($cacheDir)) {
             New-Item -path "$cacheDir" -ItemType "directory" | Out-Null
         }
         $destZipFile = "$cacheDir\node.zip"
 
+        # if ( -not (Test-Path "$destZipFile")) {
         if ( -not (Test-Pathest-Path "$destZipFile")) {
             Write-Output "Retrieving $nodejsBinUrl"
             Invoke-WebRequest $nodejsBinUrl -OutFile $destZipFile
@@ -182,7 +186,7 @@ Catch {
 }
 
 if ( -not ($DefaultNodeVersion -eq $existNodejsVersion) ) {
-
+    Get-NodeJS $DefaultNodeVersion
 }
 
 function Add-UserPath ($dirsToAdd) {
