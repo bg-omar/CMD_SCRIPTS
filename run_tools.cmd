@@ -71,7 +71,9 @@ ECHO        %_fMag% ^| %_RESET% 4     %_fYellow% Keep PC Idle %_RESET%     %_fMa
 ECHO        %_fMag% ^| %_RESET% 5     %_fMag%    Aliases   %_RESET%     %_fMag% ^| %_RESET% 
 ECHO        %_fMag% ^| %_RESET% 6     %_fRed%   Date-Time  %_RESET%     %_fMag% ^| %_RESET%  
 ECHO        %_fMag% ^| %_RESET% 7  %_fCyan% restart explorer %_RESET%    %_fMag% ^| %_RESET%  
-ECHO        %_fMag% ^| %_RESET% 8  %_fCyan%   Node_modules-  %_RESET%    %_fMag% ^| %_RESET%  
+ECHO        %_fMag% ^| %_RESET% 8  %_fCyan%   Node_modules-  %_RESET%    %_fMag% ^| %_RESET%
+ECHO        %_fMag% ^| %_RESET% 9  %_fCyan%   Install NVM    %_RESET%    %_fMag% ^| %_RESET%
+ECHO        %_fMag% ^| %_RESET% 10  %_fCyan%    Env Vars     %_RESET%    %_fMag% ^| %_RESET%
 ECHO        %_fMag% ^| %_RESET%q 0    %_f1Grey%   EXIT    %_RESET%        %_fMag% ^| %_RESET%  
 ECHO        %_fMag%  ---------------------------- %_RESET% 
 ECHO.
@@ -244,8 +246,28 @@ EXIT /B
 	ECHO %_fCyan%------------------------------------- node_modules: -------------------------------------%_RESET%
 	GOTO INPUT_CASE
 	
-		
-	
+
+
+:CASE_9
+	ECHO %_fCyan%------------------------------------- Install NVM : -------------------------------------%_RESET%
+	ECHO.
+	ECHO powershell .\no-admin_NPM_Version_Manager.ps1
+    powershell .\no-admin_NPM_Version_Manager.ps1
+	ECHO.
+	ECHO %_fCyan%------------------------------------- Install NVM: -------------------------------------%_RESET%
+	GOTO INPUT_CASE
+
+:CASE_10
+	ECHO %_fCyan%-------------------------------- Environment Variables ---------------------------------%_RESET%
+	ECHO.
+	ECHO Show/Edit Environment Variables
+    rundll32 sysdm.cpl,EditEnvironmentVariables
+	ECHO.
+	ECHO %_fCyan%-------------------------------- Environment Variables ---------------------------------%_RESET%
+	GOTO INPUT_CASE
+
+
+
 	
 	
 :: Exit the Program

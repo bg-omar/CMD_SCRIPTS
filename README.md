@@ -1,5 +1,7 @@
 # CMD_SCRIPTS
 My scripts folder included in PATH so I can use these in CMD Powershell Terminal
+Place files in some location and add directory to Users Environment Variables path
+Start with run_tools.cmd
 
 
 ### Making Badges ![ANGULAR](https://img.shields.io/static/v1?label=Angular&logo=angular&color=980011&message=Front-End) from <img height="24" width="24" src="https://cdn.jsdelivr.net/npm/simple-icons@v7/icons/angular.svg" /> .svg logo
