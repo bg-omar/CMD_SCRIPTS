@@ -126,43 +126,55 @@ EXIT /B
 
 :: cut_outro
 :TYPE_CUT_OUTRO
-	ECHO %_Cy% ------------------------------------- : -------------------------------------------------- %_R%
+	ECHO %_Cy% ------------------------------------- Cut Outro -------------------------------------------------- %_R%
 	ECHO TYPE = CUT_OUTRO
     SETLOCAL
     :: count to 5 storing the results in a variable
         set _tst=0
         for %%a in (*.%ON%)do (
+
             SETLOCAL
-            call :ffprobe %%a
+            ECHO %_Cy% ------------------------------------- : -------------------------------------------------- %_R%
+            echo "%%a"
+            call :ffprobe "%%a"
+
         )
-            ::FOR /l %%G in (1,1,5) Do (
+
             :ffprobe
-                FOR /F "tokens=* USEBACKQ" %%G IN (`"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "%1""`) DO (
-                    call :duration %%G %1
-                )
+                if "%~x1" == ".mkv" (
+                    for /f "tokens=1* delims=:" %%a in ('"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "%~nx1""') do (
+                        set "duration=%%a"
+                        echo duration = %duration%
+                        call :duration %%a "%~nx1"
+                        )
+                ) else (
+                     FOR /F "tokens=1* USEBACKQ" %%G IN (`"ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "%1""`) DO (
+                         call :duration %%G %1
+                     )
+                 )
+                echo: %1
                 echo Total = %_tst% Encoded
+                ECHO %_Cy% ------------------------------------- : -------------------------------------------------- %_R%
                 goto :eof
 
             :duration
                 set /a _sum=%1
-                set _title=%2
+                set "_title=%2"
                 set /a _tot=%_sum%-%END%
-                ECHO:%_Cy% ------------ %_title% ------------- %_R%
+                ECHO:%_Mag% ------------ %_title% ------------- %_R%
                 echo  duration in sec: %1      -%END%     new duration = %_tot% & set /a _tst+=1
-                echo:
-                IF EXIST C:/output/%_title% (
-                           echo file already exist: using == "C:/output/%_time%_%_title%"
-                           ffmpeg -i %_title% -x264-params opencl=true -t %_tot% -c:v copy -c:a copy "C:/output/%_time%_%_title%"
+                IF EXIST C:/output/%2 (
+                   echo skipped file: %2
+                   goto :eof
                 ) ELSE (
-                           ffmpeg -i %_title% -x264-params opencl=true -t %_tot% -c:v copy -c:a copy "C:/output/%_title%"
+                   ffmpeg -i %2 -x264-params opencl=true -t %_tot% -c:v copy -c:a copy C:/output/%2
+                   goto :eof
                 )
-                ECHO %_Cy% ------------------------------------- : -------------------------------------------------- %_R%
-                goto :eof
     ECHO:
     ECHO %_BBlue% ------------------------------------- : -------------------------------------------------- %_R%
 	ECHO %_Cy% ------------------------------------- : -------------------------------------------------- %_R%
 	GOTO END_CASE
-	
+
 
 :: no TYPE Exit
 :NOTYPE
@@ -173,8 +185,10 @@ EXIT /B
 	echo:
 	ECHO resize.bat TYPE %_BGreen% START_2_END %_R% START %_BGreen% H:MM:SS %_R% END %_BGreen% H:MM:SS %_R%
 	ECHO:
-	ECHO resize.bat TYPE %_BGreen% CUT_OUTRO %_R% END %_BGreen% 60 %_R% ON mp4
+	ECHO resize.bat TYPE %_BGreen% CUT_OUTRO %_R% END %_BGreen% 60 %_R% ON %_BGreen% mp4 %_R%
 	ECHO                                 [60=1min]      [mp4, avi, mkv]
+    ECHO resize.bat TYPE %_BGreen% START_AT %_R% START %_BGreen% 60 %_R% ON %_BGreen% mkv %_R%
+    ECHO                                 [60=1min]      [mp4, avi, mkv]
 
  
 :: End the programm 
